@@ -3,8 +3,8 @@ const createBundler = require("@bahmutov/cypress-esbuild-preprocessor");
 const preprocessor = require("@badeball/cypress-cucumber-preprocessor");
 const createEsbuildPlugin = require("@badeball/cypress-cucumber-preprocessor/esbuild");
 async function setupNodeEvents(on, config) {
-  // This is required for the preprocessor to be able to generate JSON reports after each run, and more,
   await preprocessor.addCucumberPreprocessorPlugin(on, config);
+  require('cypress-mochawesome-reporter/plugin')(on);
   on(
     "file:preprocessor",
     createBundler({
@@ -15,6 +15,14 @@ async function setupNodeEvents(on, config) {
   return config;
 }
 module.exports = defineConfig({
+  reporter: 'cypress-mochawesome-reporter',
+  reporterOptions:{
+    charts:true,
+    reportPageTitle:'report',
+    embeddedScreenshots: true,
+    inlineAssets: true,
+    saveAllAttempts: false,
+  },
   e2e: {
     watchForFileChanges: false,
     baseUrl: 'https://demoblaze.com/',
